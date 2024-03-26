@@ -35,3 +35,18 @@ Ethifel
 Ananyll
 Frelied
 ```
+
+```
+py name-gen.py --mode=1 --len=5
+
+Eshar
+Bruel
+Sheli
+Brano
+Prino
+Orett
+Glewa
+Gwyan
+Kryel
+Eshon
+```
