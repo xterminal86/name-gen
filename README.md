@@ -8,7 +8,7 @@ optional arguments:
   --mode {0,1,2,3}  0 - digraphs, 1 - trigraphs, 2 - digraphs / trigraphs, 3 - trigraphs / digraphs. Default: 0
   --debug           Print distributions (e.g. for subsequent hardcoding).
   --names NAMES     How many names to generate. Default: 10
-  --relaxed         Relax generation rules (high rate of shitty names!). Default: off
+  --relaxed         Relax generation rules (may produce unpronounceable names). Default: off
 
 Modes help:
 
