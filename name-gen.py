@@ -331,12 +331,12 @@ def main():
   addHelp = textwrap.dedent(
   '''
   Modes help:
-  
+
   0 - construct name based on distribution of one subsequent letter.
   1 - construct name based on distribution of two subsequent letters.
   2 - alternate between mode 0 and 1 on each iteration.
   3 - alternate between mode 1 and 0 on each iteration.
-  
+
   Most descent results generate with len [ 5 ; 6 ] for mode 0 and 1.
   For modes 2 and 3 len can be increased by 1 or 2 values.
   '''
@@ -348,7 +348,7 @@ def main():
   parser.add_argument("--seed",
                       help=(
                         "Plain text file name with names to build letters "
-                        "distribution from (one per line)"
+                        "distribution from (one name per line)"
                       ));
   parser.add_argument("--len",
                       type=int,

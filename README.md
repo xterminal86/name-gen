@@ -3,7 +3,7 @@ usage: name-gen.py [-h] [--seed SEED] [--len LEN] [--mode {0,1,2,3}] [--debug] [
 
 optional arguments:
   -h, --help        show this help message and exit
-  --seed SEED       Plain text file name with names to build letters distribution from (one per line)
+  --seed SEED       Plain text file name with names to build letters distribution from (one name per line)
   --len LEN         Maximum name length. Default: 6
   --mode {0,1,2,3}  0 - digraphs, 1 - trigraphs, 2 - digraphs / trigraphs, 3 - trigraphs / digraphs. Default: 0
   --debug           Print distributions (e.g. for subsequent hardcoding).
