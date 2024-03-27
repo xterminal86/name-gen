@@ -2,3 +2,5 @@ __pycache__/
 .idea/
 *.txt
 !requirements.txt
+!female-first-names.txt
+!male-first-names.txt
