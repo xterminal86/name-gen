@@ -226,6 +226,8 @@ class NameGen:
       attempt += 1;
 
       if attempt >= maxAttempts:
+        if self._debugMode:
+          print(f"  max attempts reached - returning { res }");
         break;
 
       if mode == NameGenMode.DIGRAPHS:
@@ -246,7 +248,7 @@ class NameGen:
       if res[0] == "y":
         continue;
 
-      if res[0] not in Vowels and len(res) > 2:
+      if res[0] not in Vowels and res[1] not in Vowels and len(res) > 2:
         prefix = res[:2];
 
         prefixOk = (
@@ -263,6 +265,7 @@ class NameGen:
       if (rank > self._averageRank) or (rank < (self._averageRank / 2)):
         continue;
 
+      # gud
       break;
 
     res = res.capitalize();
@@ -373,7 +376,10 @@ def main():
                       default=maxNames,
                       help=f"How many names to generate. Default: { maxNames }");
   parser.add_argument("--relaxed",
-                      help="Relax generation rules (high rate of shitty names!). Default: off",
+                      help=(
+                        "Relax generation rules "
+                        "(may produce unpronounceable names). Default: off"
+                      ),
                       action="store_true");
 
   args = parser.parse_args();
