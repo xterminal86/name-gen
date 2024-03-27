@@ -50,3 +50,18 @@ Gwyan
 Kryel
 Eshon
 ```
+
+```
+py name-gen.py --seed="female-first-names.txt"
+
+Veurrl
+Malden
+Villun
+Zoshne
+Fetral
+Sharan
+Grinsa
+Norlin
+Camand
+Warinn
+```
