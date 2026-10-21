@@ -1,7 +1,10 @@
+![](logo.png)
+
 ```
 usage: name-gen.py [-h] [--seed SEED] [--len LEN] [--mode {0,1,2,3}] [--debug] [--names NAMES] [--relaxed]
+                   [--bias {0,1,2}] [--bc BC]
 
-optional arguments:
+options:
   -h, --help        show this help message and exit
   --seed SEED       Plain text file name with names to build letters distribution from (one name per line)
   --len LEN         Maximum name length. Default: 6
@@ -9,6 +12,8 @@ optional arguments:
   --debug           Print distributions (e.g. for subsequent hardcoding).
   --names NAMES     How many names to generate. Default: 10
   --relaxed         Relax generation rules (may produce unpronounceable names). Default: off
+  --bias {0,1,2}    Generated word bias: 0 - no bias, 1 - more vowels, 2 - more consonants. Default: 0
+  --bc BC           Set bias coefficient. Default: 1.25
 
 Modes help:
 
