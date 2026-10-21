@@ -83,11 +83,16 @@ def GetRank(string : str) -> float:
   cons = 0;
   vows = 0;
 
+  consToVowsRatio = len(Consonants) / len(Vowels);
+
+  vowsWeight = 1;
+  consWeight = vowsWeight / consToVowsRatio;
+
   for c in string:
     if c in Consonants:
-      cons += 1;
+      cons += consWeight;
     else:
-      vows += 1;
+      vows += vowsWeight;
 
   if cons == 0:
     cons = 1;
@@ -102,7 +107,7 @@ TrigraphsDistribution = {'j': {'am': 20, 'oh': 19, 'os': 21, 'as': 5, 'ef': 8, '
 Consonants = "bcdfghjklmnpqrstvwxz";
 Vowels     = "aeiouy";
 
-AverageRank = 0.9243759425867225;
+AverageRank = 3.0774307902993745;
 
 #
 # Can be turned off by setting 0 as value.

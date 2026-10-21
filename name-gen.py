@@ -1,6 +1,6 @@
 import random;
 import argparse;
-import textwrap
+import textwrap;
 
 from enum import Enum, auto;
 from util import (WeightedRandom,
@@ -16,16 +16,22 @@ from util import (WeightedRandom,
 ################################################################################
 
 class NameGenMode(Enum):
-    DIGRAPHS  = auto()
-    TRIGRAPHS = auto()
-    DIGTRIG   = auto()
-    TRIGDIG   = auto()
+  DIGRAPHS  = auto()
+  TRIGRAPHS = auto()
+  DIGTRIG   = auto()
+  TRIGDIG   = auto()
+
+class WordBias(Enum):
+  DEFAULT    = auto()
+  VOWELS     = auto()
+  CONSONANTS = auto()
 
 class NameGen:
   _digraphsDistribution  = {};
   _trigraphsDistribution = {};
 
   _averageRank = 0.0;
+  _biasCoeff   = 1.0;
 
   _debugMode = False;
 
@@ -44,19 +50,20 @@ class NameGen:
     if printDistributions:
       self._debugMode = True;
 
-      print("Digraphs distribution:\n");
-      print(self._digraphsDistribution);
+      print();
+
+      print(f"DigraphsDistribution = { self._digraphsDistribution };");
 
       print();
       print("-"*80);
+      print();
 
-      print("Triigraphs distribution:\n");
-      print(self._trigraphsDistribution);
+      print(f"TrigraphsDistribution = { self._trigraphsDistribution };");
 
       print();
       print("-"*80);
-
       print();
+
       print(f"Average rank: { self._averageRank }\n");
 
   # ----------------------------------------------------------------------------
@@ -217,7 +224,13 @@ class NameGen:
 
   # ----------------------------------------------------------------------------
 
-  def Generate(self, maxLen, mode : NameGenMode, relaxed : bool) -> str:
+  def Generate(
+    self, maxLen,
+    mode : NameGenMode,
+    bias : WordBias,
+    biasCoeff : float,
+    relaxed : bool
+  ) -> str:
     maxAttempts = 1000;
     attempt = 0;
     res = "";
@@ -245,6 +258,9 @@ class NameGen:
       if relaxed:
         break;
 
+      #
+      # Words started with 'y' are considered invalid.
+      #
       if res[0] == "y":
         continue;
 
@@ -262,8 +278,22 @@ class NameGen:
 
       rank = GetRank(res);
 
-      if (rank > self._averageRank) or (rank < (self._averageRank / 2)):
-        continue;
+      #
+      # Rank shows vowels / consonants ratio. Since in my rules there are 20
+      # consonants and 6 vowels (I consider 'y' a vowel), consonants will have
+      # 20 / 6 = 3.33(3) times LESS weight than vowels.
+      # Average rank shows this ratio in average across all dictionary's words,
+      # so to generate words with more vowels, we need for a word to have its
+      # rank greater than average. And for consonant bias we need word's rank to
+      # be less than average. We'll try to use a most suitable coefficient
+      # (arbitrarily chosen) to control this.
+      #
+      if bias == WordBias.VOWELS:
+        if (rank < (self._averageRank * biasCoeff)):
+          continue;
+      elif bias == WordBias.CONSONANTS:
+        if (rank > (self._averageRank / biasCoeff)):
+          continue;
 
       # gud
       break;
@@ -322,6 +352,8 @@ def main():
 
   maxLen = 6;
   mode = 0;
+  bias = 0;
+  biasCoeff = 1.25;
   maxNames = 10;
 
   modes = {
@@ -329,6 +361,12 @@ def main():
     1 : NameGenMode.TRIGRAPHS,
     2 : NameGenMode.DIGTRIG,
     3 : NameGenMode.TRIGDIG
+  };
+
+  biases = {
+    0 : WordBias.DEFAULT,
+    1 : WordBias.VOWELS,
+    2 : WordBias.CONSONANTS
   };
 
   addHelp = textwrap.dedent(
@@ -381,20 +419,39 @@ def main():
                         "(may produce unpronounceable names). Default: off"
                       ),
                       action="store_true");
+  parser.add_argument("--bias",
+                      type=int,
+                      default=bias,
+                      choices=biases.keys(),
+                      help=(
+                        f"Generated word bias: 0 - no bias, 1 - more vowels, "
+                        f"2 - more consonants. Default: { bias }"
+                        )
+                      );
+  parser.add_argument("--bc",
+                      type=float,
+                      default=biasCoeff,
+                      help=f"Set bias coefficient. Default: { biasCoeff }");
 
   args = parser.parse_args();
 
   if args.seed is not None:
     database = args.seed;
 
-  maxLen   = args.len;
-  mode     = args.mode;
-  maxNames = args.names;
+  maxLen    = args.len;
+  mode      = args.mode;
+  bias      = args.bias;
+  biasCoeff = args.bc
+  maxNames  = args.names;
 
   rankAvg = 0.0;
 
   if mode not in modes:
     print("Invalid mode!");
+    exit(1);
+
+  if biasCoeff is not None and biasCoeff <= 0:
+    print("Bias coefficient must be > 0");
     exit(1);
 
   lines = None;
@@ -429,7 +486,13 @@ def main():
   nameGen = NameGen(d2, d3, rankAvg, args.debug);
 
   for i in range(maxNames):
-    print(nameGen.Generate(maxLen, modes[mode], args.relaxed));
+    print(
+      nameGen.Generate(maxLen,
+                       modes[mode],
+                       biases[bias],
+                       biasCoeff,
+                       args.relaxed)
+    );
 
 ################################################################################
 
