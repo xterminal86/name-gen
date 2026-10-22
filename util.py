@@ -5,8 +5,13 @@ import random;
 def WeightedRandom(weightsByType : dict):
   sum = 0;
 
+  begin = list( weightsByType.keys() )[0];
+
   for _, v in weightsByType.items():
     sum += v;
+
+  if sum == 1:
+    return begin;
 
   target = random.randrange(1, sum);
 
@@ -15,11 +20,6 @@ def WeightedRandom(weightsByType : dict):
       return k;
 
     target = target - v;
-
-  #
-  # Shouldn't get here, but in any case.
-  #
-  begin = list( weightsByType.keys() )[0];
 
   return begin;
 
