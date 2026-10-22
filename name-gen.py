@@ -450,8 +450,8 @@ def main():
     print("Invalid mode!");
     exit(1);
 
-  if biasCoeff is not None and biasCoeff <= 0:
-    print("Bias coefficient must be > 0");
+  if biasCoeff is not None and biasCoeff < 1.0:
+    print("Bias coefficient must be >= 1.0");
     exit(1);
 
   lines = None;
