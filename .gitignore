@@ -1,6 +1,7 @@
 __pycache__/
 .idea/
 *.txt
+model.json
 !requirements.txt
 !female-first-names.txt
 !male-first-names.txt
